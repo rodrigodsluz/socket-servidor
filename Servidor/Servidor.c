@@ -6,7 +6,7 @@
 #include <sys/types.h>
 
 #define BUFFER 1024
-#define PORT 777
+#define PORT 10222
 
 typedef struct
 {
