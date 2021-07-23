@@ -1,190 +1,162 @@
-#include <stdio.h>
-#include <locale.h>
-#include <winsock2.h>
-#include <string.h>
-#include <windows.h>
+#include<stdio.h>
+#include<winsock2.h>
+
 #include <sys/types.h>
+#include <windows.h>
 
+#include<string.h>
+#include<locale.h>
+
+#define PORTA 10222
 #define BUFFER 1024
-#define PORT 10222
 
-typedef struct
-{
-    char clientePorta[3];
+//--------------------------------------------------------------------------
+int adicionarAquivo();
 
-    char arquivoNome[100];
+typedef struct{
+    char nome_arq[50];
+    char porta_cliente[6];
+    char ip_cliente[16];
+}InformaCliente;
 
-    char clienteIP[16];
-} Cliente;
 
-int adicionarArquivo();
+//--------------------------------------------------------------------------
+int main(){
+    int qnt_arquivos,i,rec_msg_tam,status,er;
+    setlocale(LC_ALL,"Portuguese");
 
-int main(void)
-{
-    setlocale(LC_ALL, "Portuguese");
+    printf("Iniciar Servidor?\n 2 - Iniciar\n");
+    scanf("%d",&i);
+    if(i==1){
 
-    int i, msgTamanhoRec, erro, arquivoQtd, status;
+        adicionarAquivo();
 
-    printf("Digite 2 para iniciar o servidor: \n");
+    }
 
-    scanf("%d", &i);
+    WSADATA data;
+    SOCKET sock_servidor;
 
-    if (i == 1)
-        adicionarArquivo();
+    struct sockaddr_in addr_servidor,addr_cliente;
 
-    SOCKET serverSocket;
+    int addr_tam=sizeof(SOCKADDR);
+    char *buffer;
+    buffer = (char*)malloc(BUFFER);
+    FILE *repositorio;
+    repositorio=fopen("repositorio.bs","rb");
 
-    struct sockaddr_in serverAddr, clienteAddr;
+    fread(&qnt_arquivos,sizeof(qnt_arquivos),1,repositorio);
+    char nome_arquivo[50];
+    InformaCliente dados_repositorio[qnt_arquivos],dados_arq;
 
-    WSADATA dado;
+    fread(dados_repositorio,sizeof(dados_repositorio),qnt_arquivos,repositorio);
+    fclose(repositorio);
 
-    int tamAddr = sizeof(SOCKADDR);
 
-    char *buffer = (char *)malloc(BUFFER), arquivoNome[50];
-
-    FILE *dadosRepositorio = fopen("dadosRepositorio.bs", "rb");
-
-    fread(&arquivoQtd, sizeof(arquivoQtd), 1, dadosRepositorio);
-
-    Cliente dados_repositorio[arquivoQtd], dados_arq;
-
-    fread(dados_repositorio, sizeof(dados_repositorio), arquivoQtd, dadosRepositorio);
-
-    fclose(dadosRepositorio);
-
-    if (WSAStartup(MAKEWORD(2, 2), &dado) != 0)
-    {
-        printf("Erro\n");
+    if(WSAStartup(MAKEWORD(2, 2), &data)!=0){
+        printf("Falha WSAStartup\n");
         return -1;
     }
 
-    serverSocket = socket(AF_INET, SOCK_DGRAM, 0);
-    if (serverSocket < 0)
-    {
-        printf("Erro\n");
+
+    sock_servidor=socket(AF_INET,SOCK_DGRAM,0);
+    if(sock_servidor<0){
+        printf("IMPOSSIVEL ISSO MEU, socket não funcionou\n");
         return -1;
     }
 
-    memset(&serverAddr, 0, sizeof(serverAddr));
+    memset(&addr_servidor, 0, sizeof(addr_servidor));
 
-    serverAddr.sin_family = AF_INET;
+    addr_servidor.sin_family = AF_INET;
+    addr_servidor.sin_port = htons(PORTA);
+    addr_servidor.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    serverAddr.sin_port = htons(PORT);
 
-    serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    if(bind(sock_servidor,(struct sockaddr *)&addr_servidor , sizeof(addr_servidor))<0){
 
-    if (bind(serverSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
-    {
-        printf("Erro bind() : %i\n", erro = WSAGetLastError());
+        printf("Erro bind() : %i\n",er=WSAGetLastError());
         return -1;
+
     }
+  
+    listen(sock_servidor,1);
 
-    listen(serverSocket, 1);
+    printf("Esperando recebimento de dados . . .\n");
 
-    printf("Carregando\n");
+    while(1){
 
-    while (1)
-    {
-        memset(buffer, '\0', BUFFER);
-        if ((msgTamanhoRec = recvfrom(serverSocket, buffer, BUFFER, 0, (struct sockaddr *)&clienteAddr, &tamAddr)) == SOCKET_ERROR)
-        {
-            printf("recvfrom() erro : %d\n", WSAGetLastError());
+        memset(buffer,'\0', BUFFER);
+        if ((rec_msg_tam=recvfrom(sock_servidor, buffer, BUFFER, 0, (struct sockaddr *) &addr_cliente, &addr_tam)) == SOCKET_ERROR){
+            printf("recvfrom() falhou, ERRO: %d\n" , WSAGetLastError());
             exit(EXIT_FAILURE);
         }
-        if (buffer[0] != '\0')
-        {
-            strcpy(arquivoNome, buffer);
-
-            status = 0;
-
-            for (i = 0; i < arquivoQtd; i++)
-            {
-                if (strcmp(dados_repositorio[i].arquivoNome, arquivoNome) == 0)
-                {
-                    dados_arq = dados_repositorio[i];
-                    printf("arquivo %s localizado\n", arquivoNome);
-                    status = 1;
+        if(buffer[0]!='\0'){
+            strcpy(nome_arquivo,buffer);
+            status=0;
+            for(i=0;i<qnt_arquivos;i++){
+                if(strcmp(dados_repositorio[i].nome_arq,nome_arquivo)==0){
+                    dados_arq=dados_repositorio[i];
+                    printf("O arquivo: %s foi encontrado \n",nome_arquivo);
+                    status=1;
                     break;
                 }
             }
-
-            memset(buffer, '\0', BUFFER);
-
-            if (status)
-            {
-                buffer[0] = '1';
-
-                strcat(buffer, dados_arq.clientePorta);
-
-                if (sendto(serverSocket, buffer, strlen(buffer), 0, (struct sockaddr *)&clienteAddr, sizeof(clienteAddr)) == SOCKET_ERROR)
-                {
-                    printf("sendto() erro : %d\n", WSAGetLastError());
+            memset(buffer,'\0', BUFFER);
+            if(status==1){
+                buffer[0]='1';
+                strcat(buffer,dados_arq.porta_cliente);
+                if (sendto(sock_servidor, buffer, strlen(buffer) , 0 , (struct sockaddr *) &addr_cliente, sizeof(addr_cliente)) == SOCKET_ERROR){
+                    printf("sendto() falhou, ERRO: %d\n" , WSAGetLastError());
                     exit(EXIT_FAILURE);
                 }
-
-                printf("O Arquivo foi enviado\n No aguardo...\n");
+                printf("A espera de um milagre ...\n ");
+                printf("Aguardando dados '-' \n");
             }
-            else if (status == 0)
-            {
-                strcpy(buffer, "0Erro-0001");
+            else if (status==0){
 
-                if (sendto(serverSocket, buffer, strlen(buffer), 0, (struct sockaddr *)&clienteAddr, sizeof(clienteAddr)) == SOCKET_ERROR)
-                {
-                    printf("sendto() erro : %d\n", WSAGetLastError());
+                strcpy(buffer,"0Erro-0001");
+                if (sendto(sock_servidor, buffer, strlen(buffer) , 0 , (struct sockaddr *) &addr_cliente, sizeof(addr_cliente)) == SOCKET_ERROR){
+                    printf("sendto() falhou, ERRO: %d\n" , WSAGetLastError());
                     exit(EXIT_FAILURE);
                 }
-                printf("O arquivo não foi encontrado\n No aguardo...\n");
+                printf("Arquivo nao localizado . . . Aguardando dados '-' \n");
             }
         }
+
     }
 
-    return 0;
+
 }
 
-int adicionarArquivo()
-{
-    int arquivoQntd = 0;
+int adicionarAquivo(){
+    FILE *repositorio;
+    int qnt_arquivo=0;
+    repositorio=fopen("repositorio.bs","rb");
 
-    FILE *dadosRepositorio;
+    fread(&qnt_arquivo,sizeof(int),1,repositorio);
+    InformaCliente inserir,existente[qnt_arquivo];
 
-    dadosRepositorio = fopen("dadosRepositorio.bs", "rb");
+    fread(&existente,sizeof(InformaCliente),qnt_arquivo,repositorio);
 
-    fread(&arquivoQntd, sizeof(int), 1, dadosRepositorio);
-
-    Cliente add, atual[arquivoQntd];
-
-    fread(&atual, sizeof(Cliente), arquivoQntd, dadosRepositorio);
-    
-    fclose(dadosRepositorio);
-
-    printf("Entre com o nome do arquivo\n");
-
-    scanf("%s", add.arquivoNome);
-
+    fclose(repositorio);
+    printf("Inserir nome do arquivo\n");
+    scanf("%s",inserir.nome_arq);
+    fflush(stdin);
+    printf("Informe a porta do cliente\n");
+    scanf("%s",inserir.porta_cliente);
     fflush(stdin);
 
-    printf("Entre com a porta do cliente\n");
+    strcpy(inserir.ip_cliente,"127.0.0.1");
+    qnt_arquivo++;
 
-    scanf("%s", add.clientePorta);
+    repositorio=fopen("repositorio.bs","wb");
+    fwrite(&qnt_arquivo,sizeof(int),1,repositorio);
 
-    fflush(stdin);
+    fwrite(&existente,sizeof(InformaCliente),qnt_arquivo-1,repositorio);
 
-    strcpy(add.clienteIP, "127.0.0.1");
+    fwrite(&inserir,sizeof(InformaCliente),1,repositorio);
 
-    arquivoQntd = arquivoQntd + 1;
+    fclose(repositorio);
 
-    dadosRepositorio = fopen("dadosRepositorio.bs", "wb");
-
-    fwrite(&arquivoQntd, sizeof(int), 1, dadosRepositorio);
-
-    fwrite(&atual, sizeof(Cliente), arquivoQntd - 1, dadosRepositorio);
-
-    fwrite(&add, sizeof(Cliente), 1, dadosRepositorio);
-
-    fclose(dadosRepositorio);
-
-    printf("Os dados foram armazenados no repositório de dados!!!\n");
-
+    printf("dados do arquivo inseridos no repositorio\n");
     return 0;
 }
-{"mode":"full","isActive":false}
