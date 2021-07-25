@@ -51,10 +51,6 @@ Com o intuito de realizar um estudo sobre a transferência de arquivos entre dif
 >>Readme
 >>>Readme.md
 
->>>Readme.html
-
->>>Readme.pdf
-
 >>>Imagens
 >>>>cl_envia.png
 
@@ -120,7 +116,6 @@ Como a finalidade deste projeto é puramente acadêmica, o IP é como `127.0.0.1
 
 `Mudanças podem ser feitas, mas é necessária uma recompilação.`
 
->Modifique o código à vontade!
 
 
 
@@ -149,7 +144,7 @@ O `Servidor.exe` é responsável por rastrear quem possui os arquivos desejados.
 | Opção  | Função |
 |:------------- |:---------------:|
 | 1     | Adicionar dados de um arquivo no repositório |         
-| 2      | Continuar sem adicionar novos dados|               
+| 2     | Continuar sem adicionar novos dados|               
 
 
 >Nota: Após uma opção ser selecionada, `fica em escuta por um cliente que almeja encontrar um arquivo`.
@@ -166,12 +161,12 @@ O `Servidor.exe` é responsável por rastrear quem possui os arquivos desejados.
 * Servidor.exe
 * musica.mp3
 
-*Sistema Operacional: Windows XP*
+*Sistema Operacional: Windows 10 PRO*
 
 
 **Passos:**
 
-```1º - Servidor.exe já iniciado, sendo "2" escolhida.```
+```1º - Servidor.exe já iniciado, sendo "2" a opção escolhida.```
 
 ![Servidor](imagens/serv.png)
 

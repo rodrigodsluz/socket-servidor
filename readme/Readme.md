@@ -1,52 +1,60 @@
-![Troll](imagens/troll.png)
-##Versão
+![Transferidor UDP](imagens/udp.png)
+## :closed_book: Versão
 1.0.0
-##Disponibilizado
-Junho - 2018
 
-##Desenvolvido Por
+## :information_source: Disponibilizado em
+Julho de 2021
+
+## :construction_worker: Desenvolvido Por
 ```
-André Felipe Magalhães Silva - CCO
-	- Email: andrefelipe1@hotmail.com
+João Lucas Ribeiro, curso de Sistemas de informação
+-> Email: ribeirojoaolucas68@gmail.com
 	
-José Luiz Corrêa Junior - CCO
-	- Email: juninhopc@icloud.com
-	- Snap: juninhopc
-```
+Matheus de Souza, curso de Sistemas de informação
+-> Email: matheussouza18@live.com
 
+Rodrigo Duarte Silva Luz, curso de Sistemas de informação
+-> Email: rodrigodsluz@gmail.com
+
+Robson de Arruda Silva, curso de Sistemas de informação
+-> Email: robsondearruda1999@gmail.com
+
+```
 
 > Itajubá - MG
 >>Universidade Federal de Itajubá - UNIFEI
 
-##O TROLLSFERIDOR UDP® consiste em 3 executáveis
+<div align="center">
+   <p><b>Vamos às informações importantes!</b></p>  
+</div>   
+   
+![Informações](imagens/info.png)
+
+## 🔖 O TRANSFERIDOR UDP® é composto por 3 executáveis, listados abaixo
 * Cliente-Envia.exe
 * CLiente-Recebe.exe
 * Servidor.exe
 
-##Uma Breve História do Trollsferidor UDP®
+## :information_source: Como surgiu o Transferidor UDP® ?
 
-O **Trollsferidor UDP®** consiste em um conjunto de 3 programas escritos em C para permitir a transferência de arquivos entre diferentes hosts, embora na compilação padrão e no exemplo esteja sendo utilizada a mesma máquina.
+Com o intuito de realizar um estudo sobre a transferência de arquivos entre diferentes hosts, surge o **Transferidor UDP®** , que contém 3 programas em Linguagem C que viabilizam a possibilidade de transferir arquivos entre  hosts distintos, ainda que esteja sendo utilizada a mesma máquina no exemplo e na compilação padrão.
 
-* Utiliza o protocolo UDP 
+* USA o protocolo UDP 
 
-* A integridade e a entrega dos pacotes é garantida por meio da soma de verificação (checksum), número de sequência, temporizadores e pacotes de reconhecimento.
+* Garante a integridade e a entrega dos pacotes através da soma de verificação, temporizadores, número de sequência e pacotes de reconhecimento.
 
-*- Por ser destinado para estudo os codigos utilizados também se encontram disponíveis para serem alterados e recompilados como desejado.*
+> :book: Como é um estudo, sinta-se à vontade para recompilar e modificar os códigos disponibilizados aqui!
 
-##Organizacao inicial dos arquivos
+## 💻 Como os arquivos são organizados inicialmente?
 
-> ####Trollsferidor_UDP
+> #### Transferidor_UDP
 >>Readme
 >>>Readme.md
-
->>>Readme.html
-
->>>Readme.pdf
 
 >>>Imagens
 >>>>cl_envia.png
 
->>>>cl_recebe.pngs
+>>>>cl_recebe.png
 >>>>
 >>>>exemplo.png
 >>>>
@@ -54,9 +62,12 @@ O **Trollsferidor UDP®** consiste em um conjunto de 3 programas escritos em C p
 >>>>
 >>>>serv.png
 >>>>
->>>>troll.png
+>>>>udp.png
 >>>>
->>>>configur.png
+>>>>info.png
+>>>>
+>>>>configuration.png
+>>>>udpFinal.png
 
 >>Cliente-Envia
 >>>Cliente-Envia.c
@@ -85,82 +96,81 @@ O **Trollsferidor UDP®** consiste em um conjunto de 3 programas escritos em C p
 >>>Servidor
 >>>>Servidor.exe
 
->>>>respositorio.bs
+>>>>repositorio.bs
 
 
 
 
-##Considerações importantes:
+## :information_source: Importante saber!
 
 
-- Os Sistemas Operacional Suportado é o Microsoft Windows
+`O Sistema Operacional Suportado é o Microsoft Windows;`
 
-- Os Arquivos a serem enviados devem estar na mesmo diretório que o Cliente-Envia.exe
+`Os arquivos a serem enviados precisam estar no mesmo diretório que o Cliente-Envia.exe;`
 
-- IP como `127.0.0.1`, logo, os programas devem ser executados todos na mesma máquina. (por ter fim puramente acadêmico).
+Como a finalidade deste projeto é puramente acadêmica, o IP é como `127.0.0.1`, portanto, os `programas devem ser executados na mesma máquina`;
 
-- Tamanho do buffer = `1024`
+`O Tamanho do buffer é 1024;`
 
-- A porta já está definida como: `10222`
+`A porta já está definida como: 10222;`
 
-- Porém mudanças podem ser feitas, exigindo recompilação.
-
-- Sinta-se livre para modificar!
-
+`Mudanças podem ser feitas, mas é necessária uma recompilação.`
 
 
 
-![config](imagens/configur.png)
 
-##Configuração do Cliente-Recebe.exe
 
-O `Cliente-Recebe` tem como função solicitar a transferência de um arquivo por meio da busca pelo nome do mesmo.
+![config](imagens/configuration.png)
+
+## :information_source: Configuração do Cliente-Recebe.exe
+
+O `Cliente-Recebe` é responsável por `solicitar a transferência de um arquivo`, buscando pelo nome do mesmo.
 	
-* Somente tem como entrada o nome do arquivo desejado.
+* A entrada é `somente` o nome do arquivo desejado.
 
-##Configuração do Cliente-Envia.exe
-O `Cliente_Envia.exe` tem como função possuir os arquivos requisitados e os enviar.
+## :information_source: Configuração do Cliente-Envia.exe
+O `Cliente_Envia.exe` é responsável por `conter os arquivos requisitados e os enviar`.
 
-*Obs.: Apenas fica em escuta após ter sido iniciado, aguardando conexão.*
+>Nota: `Apenas fica em escuta após ter sido iniciado`, aguardando conexão.
 
-* Não recebe nada como entrada.
+* Não recebe `nada` como entrada.
 
-#Configuração do Servidor.exe
+# :information_source: Configuração do Servidor.exe
 
-O `Servidor.exe` tem com função rastrear o possuidor dos arquivos desejados.
+O `Servidor.exe` é responsável por rastrear quem possui os arquivos desejados.
 
-* Ao iniciado oferece 2 opções:
+* Depois de iniciado, irá oferecer duas opções:
 
 | Opção  | Função |
 |:------------- |:---------------:|
-| `1`     | Adicionar dados de arquivo no repositório |         
-| `2`      | Continuar sem adicionar novos dados|               
+| 1     | Adicionar dados de um arquivo no repositório |         
+| 2     | Continuar sem adicionar novos dados|               
 
 
-*Obs.: Depois de selecionada uma opção fica em escuta por um cliente que deseja encontrar um arquivo.*
+>Nota: Após uma opção ser selecionada, `fica em escuta por um cliente que almeja encontrar um arquivo`.
 
-* Somente recebe opção `1` ou `2` como entrada.
+* Recebe apenas `1` ou `2` como opção de entrada.
 
 ***
 
 ![Exemplo](imagens/exemplo.png)
 
-####O que será usado nesse exemplo:
+#### :construction_worker: O que será usado nesse exemplo:
 * Cliente-Recebe.exe
 * Cliente-Envia.exe
 * Servidor.exe
 * musica.mp3
 
-*Sistema Operacional: Windows XP*
+*Sistema Operacional: Windows 10 PRO*
 
 
 **Passos:**
 
-```1º - Servidor.exe iniciado e escolhida opção "2".```
+```1º - Servidor.exe já iniciado, sendo "2" a opção escolhida.```
 
 ![Servidor](imagens/serv.png)
 
-```2º - Cliente-Recebe.exe iniciado busacado o aquivo "musica.mp3".```
+```2º - Cliente-Recebe.exe é iniciado, busca o arquivo pelo nome e, ao recebê-lo, inicia a transferência do arquivo.```
 
 ![Cliente_recebe](imagens/cl_recebe.png)
 
@@ -168,12 +178,13 @@ O `Servidor.exe` tem com função rastrear o possuidor dos arquivos desejados.
 
 ![Cliente_envia](imagens/cl_envia.png)
 
-```4º - Caso o arquivo buscado exista a transferência já terá iniciado.```
+```4º - Caso existir o arquivo buscado, a transferência já terá iniciado.```
 
-![Transferencia](imagens/Transferencia.png)
+![Transferencia](imagens/transferencia.png)
 
-```5º - Transferência concluida!```
+```5º - Transferência concluída!```
 
 
 ---
 
+![Transferidor UDP](imagens/udpFinal.png)
